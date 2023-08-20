@@ -1,11 +1,12 @@
 version: "3"
 services:
   web:
+    container_name: "${APP_NAME}-web"
     build: .
     ports:
-      - "5000:5000"
+      - "${WEB_PORT}:${WEB_PORT}"
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:5000/healthcheck"]
+      test: ["CMD", "curl", "-f", "http://localhost:${WEB_PORT}/healthcheck"]
       interval: 30s
       timeout: 5s
       retries: 5
@@ -15,13 +16,14 @@ services:
     env_file:
       - web-variables.env
   redis:
-    image: "redis:alpine"
+    container_name: "${APP_NAME}-redis"
+    image: "redis/redis-stack:latest"
+    ports:
+      - "${REDIS_PORT}:${REDIS_PORT}"
+    env_file:
+      - redis-variables.env
     volumes: 
-      - redis-data:/data
+      - ./redis-vol:/data
   prometheus:
+    container_name: "${APP_NAME}-prometheus"
     image: "prom/prometheus"
-volumes:
-  redis-data:
-    driver: local
-    driver_opts:
-      device: ./redis-vol
