@@ -49,6 +49,13 @@ class Item(BaseModel):
     data: str
 
 
+class HealthCheck(BaseModel):
+    status: str = "ok"
+
+@app.get("/healthcheck", status_code=status.HTTP_200_OK, response_model=HealthCheck)
+def healthcheck():
+    return HealthCheck(status="ok")
+
 @app.post("/set", status_code=status.HTTP_201_CREATED)
 def set_data(item: Item, response: Response):
     if redis_con.get(item.id):
