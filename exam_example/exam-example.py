@@ -9,6 +9,10 @@ import uvicorn
 class Settings(BaseSettings):
     redis_url: str
 
+class UvicornSettings(BaseSettings):
+    UVICORN_HOST: str
+    UVICORN_PORT: int
+    UVICORN_LOG_LEVEL: str
 
 app = FastAPI()
 app.add_middleware(
@@ -20,10 +24,11 @@ app.add_middleware(
 )
 app.add_route("/prom-metrics", handle_metrics)
 settings = Settings()
+uvicornSettings = UvicornSettings()
 redis_con = None
 
 def start():
-    uvicorn.run("exam_example.exam-example:app")
+    uvicorn.run("exam_example.exam-example:app", host=uvicornSettings.UVICORN_HOST, port=uvicornSettings.UVICORN_PORT, log_level=uvicornSettings.UVICORN_LOG_LEVEL)
 
 @app.on_event("startup")
 def startup_event():
