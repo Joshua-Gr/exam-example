@@ -33,3 +33,13 @@ services:
   prometheus:
     container_name: "${APP_NAME}-prometheus"
     image: "prom/prometheus"
+    ports:
+      - "${PROMETHEUS_PORT}:${PROMETHEUS_PORT}"
+    healthcheck:
+      test: ["CMD", "wget", "-O", "/dev/null", "localhost:9090/-/healthy"]
+      interval: 30s
+      timeout: 5s
+      retries: 5
+      start_period: 5s
+    volumes:
+      - ./prometheus-vol:/etc/prometheus
