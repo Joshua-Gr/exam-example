@@ -20,6 +20,12 @@ services:
     image: "redis/redis-stack:latest"
     ports:
       - "${REDIS_PORT}:${REDIS_PORT}"
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 1s
+      retries: 5
+      start_period: 5s
     env_file:
       - redis-variables.env
     volumes: 
