@@ -2,6 +2,7 @@ from fastapi import FastAPI, HTTPException, status, Response
 from pydantic import BaseSettings, BaseModel
 from starlette_exporter import PrometheusMiddleware, handle_metrics
 import redis
+import uvicorn
 
 
 # pydantic reads case insensitive environment variables into fields in this class
@@ -21,6 +22,8 @@ app.add_route("/prom-metrics", handle_metrics)
 settings = Settings()
 redis_con = None
 
+def start():
+    uvicorn.run("exam_example.exam-example:app")
 
 @app.on_event("startup")
 def startup_event():

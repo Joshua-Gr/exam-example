@@ -1,4 +1,4 @@
-.md
-.sh
-.git
+*.md
+*.sh
+.git/
 dist/
